@@ -1,0 +1,204 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div th:replace="~{fragments/header :: css}"></div>
+<div th:replace="~{fragments/header ::  header}"></div>
+<div class="container-fluid">
+    <div class="col-sm-12 h-100 d-table mt-3">
+        <h4 th:if="${#fields.hasErrors('questionAnswer.*')}" class="error">All errors: Check All Tabs</h4>
+        <ul>
+            <li th:each="err : ${#fields.errors('questionAnswer.*')}" th:text="${err}"></li>
+        </ul>
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a th:class="${activeTab == 'basicInfo' ? 'nav-link active' : 'nav-link'}"
+                                    id="basicInfo-tab" data-bs-toggle="tab" href="#basicInfo">Basic Info</a></li>
+            <li class="nav-item"><a th:class="${activeTab == 'advancedInfo' ? 'nav-link active' : 'nav-link'}"
+                                    id="advancedInfo-tab" data-bs-toggle="tab" href="#advancedInfo">Advanced Info</a>
+            </li>
+        </ul>
+        <form action="#" class="form-horizontal" role="form" th:action="@{/admin/questionAnswer/update}"
+              th:object="${questionAnswer}" method="post" onsubmit="updateContentField()">
+            <input type="hidden" th:field="*{id}"> <input type="hidden" th:field="*{listAllSearchQueryForm}">
+            <div class="tab-content">
+                <div id="basicInfo"
+                     th:class="${activeTab == 'basicInfo' ? 'tab-pane fade show active' : 'tab-pane fade'}">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">question</label>
+                        <div class="col-sm-10">
+                            <button class="btn btn-primary" type="button" id="editViewInsertQuestionTable">Insert
+                                Table
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertQuestionRowAbove">Insert Row
+                                Above
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertQuestionRowBelow">Insert Row
+                                Below
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertQuestionColumnLeft">Insert
+                                Column Left
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertQuestionColumnRight">Insert
+                                Column Right
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewDeleteQuestionRow"> Delete Row
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewDeleteQuestionColumn"> Delete
+                                Column
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewDeleteQuestionTable">Delete
+                                Table
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                            <input class="form-control" type="hidden" id="question" name="question">
+                            <div id="questionAnswer-edit-question-editor-container"></div>
+                            <p th:if="${#fields.hasErrors('question')}" th:errorclass="error"
+                               th:errors="*{question}"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">answer</label>
+                        <div class="col-sm-10">
+                            <button class="btn btn-primary" type="button" id="editViewInsertAnswerTable">Insert Table
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertAnswerRowAbove">Insert Row
+                                Above
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertAnswerRowBelow">Insert Row
+                                Below
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertAnswerColumnLeft">Insert
+                                Column Left
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertAnswerColumnRight">Insert
+                                Column Right
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewDeleteAnswerRow"> Delete Row
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewDeleteAnswerColumn"> Delete
+                                Column
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewDeleteAnswerTable">Delete Table
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                            <input class="form-control" type="hidden" id="answer" name="answer">
+                            <div id="questionAnswer-edit-answer-editor-container"></div>
+                            <p th:if="${#fields.hasErrors('answer')}" th:errorclass="error" th:errors="*{answer}"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">seoUrl</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="text" th:field="*{seoUrl}" id="seoUrl" name="seoUrl">
+                            <p th:if="${#fields.hasErrors('seoUrl')}" th:errorclass="error" th:errors="*{seoUrl}"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">summary</label>
+                        <div class="col-sm-10">
+                            <button class="btn btn-primary" type="button" id="editViewInsertSummaryTable">Insert Table
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertSummaryRowAbove">Insert Row
+                                Above
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertSummaryRowBelow">Insert Row
+                                Below
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertSummaryColumnLeft">Insert
+                                Column Left
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewInsertSummaryColumnRight">Insert
+                                Column Right
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewDeleteSummaryRow"> Delete Row
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewDeleteSummaryColumn"> Delete
+                                Column
+                            </button>
+                            <button class="btn btn-primary" type="button" id="editViewDeleteSummaryTable">Delete Table
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10">
+                            <input class="form-control" type="hidden" id="summary" name="summary">
+                            <div id="questionAnswer-edit-summary-editor-container"></div>
+                            <p th:if="${#fields.hasErrors('summary')}" th:errorclass="error" th:errors="*{summary}"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">sources:</label>
+                        <div class="col-sm-10">
+                            <ul id="questionAnswerSources">
+                                <li th:each="prop, iterStat : *{sources}"><input class="form-control" type="text"
+                                                                                 th:field="*{sources[__${iterStat.index}__]}">
+                                    <a href="#" th:onclick="'removeQuestionAnswerSources(' + ${iterStat.index} + ')'"
+                                       style="color: red;">Remove</a></li>
+                            </ul>
+                            <button type="button" onclick="addQuestionAnswerSources()" style="color: red;">Add New
+                                Sources Property
+                                <p th:if="${#fields.hasErrors('sources')}" th:errorclass="error"
+                                   th:errors="*{sources}"></p></button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">readCount</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="number" th:field="*{readCount}" id="readCount"
+                                   name="readCount">
+                            <p th:if="${#fields.hasErrors('readCount')}" th:errorclass="error"
+                               th:errors="*{readCount}"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">createdDate</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="date" th:field="*{createdDate}" id="createdDate"
+                                   name="createdDate">
+                            <p th:if="${#fields.hasErrors('createdDate')}" th:errorclass="error"
+                               th:errors="*{createdDate}"></p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">updateDate</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" type="date" th:field="*{updateDate}" id="updateDate"
+                                   name="updateDate">
+                            <p th:if="${#fields.hasErrors('updateDate')}" th:errorclass="error"
+                               th:errors="*{updateDate}"></p>
+                        </div>
+                    </div>
+                </div>
+                <div id="advancedInfo"
+                     th:class="${activeTab == 'advancedInfo' ? 'tab-pane fade show active' : 'tab-pane fade'}">
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 mt-3">
+                        <input class="btn btn-primary" onclick="javascript:window.history.back()" value="Back"
+                               type="button">
+                        <button type="submit" id="btn-edit" class="btn btn-success">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div th:replace="~{fragments/footer :: footer}"></div>
+    <script th:inline="javascript">
+var savedQuestionContent=/*[[${questionAnswer.question}]]*/ '';
+snowEditViewQuestion.root.innerHTML = savedQuestionContent;
+var savedAnswerContent=/*[[${questionAnswer.answer}]]*/ '';
+snowEditViewAnswer.root.innerHTML = savedAnswerContent;
+var savedSummaryContent=/*[[${questionAnswer.summary}]]*/ '';
+snowEditViewSummary.root.innerHTML = savedSummaryContent;
+
+    </script>
+</div>
+</body>
+</html>

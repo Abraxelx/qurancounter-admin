@@ -1,0 +1,77 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+<div th:fragment="footer">
+    <br>
+    <hr>
+    <div class="container-fluid">
+        <footer>
+            <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+            <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+            <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+            <script th:src="@{/js/select2.full.min.js}"></script>
+            <script th:src="@{/js/bootstrap-table.min.js}"></script>
+            <script th:src="@{/js/bootstrap-table-tr-TR.min.js}"></script>
+            <script th:src="@{/js/jquery.csv.min.js}"></script>
+            <script th:src="@{/js/jquery.jcalendar.js}"></script>
+            <script th:src="@{/js/moment.js}"></script>
+            <script th:src="@{/js/moment-with-locales.min.js}"></script>
+            <script th:src="@{/js/anchor.min.js}"></script>
+            <script th:src="@{/js/jquery-steps/jquery.steps.min.js}"></script>
+            <script th:src="@{/js/jquery-validate/jquery.validate.min.js}"></script>
+            <script th:src="@{/js/quill/quill.min.js}"></script>
+            <script th:src="@{/js/genericSearchPage.js}"></script>
+            <script>if($('.select2-single, .select2-multiple')){
+anchors.options.placement = 'left';
+anchors.add('.container h1, .container h2, .container h3, .container h4, .container h5');
+$.fn.select2.defaults.set( "theme", "bootstrap" );
+
+var placeholder = "Select a State";
+$( ".select2-single, .select2-multiple" ).select2( {    placeholder: placeholder,    width: null,    containerCssClass: ':all:'} );
+$( ".select2-allow-clear" ).select2( {    allowClear: true,    placeholder: placeholder,    width: null,    containerCssClass: ':all:'} );
+function formatRepo( repo ) {  
+  if (repo.loading) return repo.text;  
+  var markup = "<div class='select2-result-repository clearfix'>" +        "<div class='select2-result-repository__meta'>" +        "<div class='select2-result-repository__title'>" + repo.text + "</div>";   
+ return markup;
+}
+function formatRepoSelection( repo ) {   
+ return repo.text;
+}
+}
+
+            </script>
+            <script th:src="@{/js/questionAnswer.js}"></script>
+            <script th:inline="javascript">var selectedAttributes = [[${selectedAttributes}]];
+var attributeValues = [[${attributeValues}]];
+var filterTypes = [[${filterTypes}]];
+var initialLogicalOperator = [[${logicalOperator}]];
+if($('#logicalOperator') && selectedAttributes){
+$('#logicalOperator').val(initialLogicalOperator ? initialLogicalOperator : "and" );
+for (var i = 0; i < selectedAttributes.length; i++) {
+ var selectedAttribute = selectedAttributes[i];
+var attributeValue = attributeValues[i] ? attributeValues[i] : "";
+var filterType = filterTypes[i];
+var attributeRow = $('<div>').addClass('attribute-row form-row');
+attributeRow.append('<div class="col"><label class="col-sm-2 col-form-label">Column</label><select class="form-control" name="selectedAttribute"><option value="' + selectedAttribute + '">' + selectedAttribute + '</option></select></div>');
+attributeRow.append('<div class="col-5"><label class="col-sm-2 col-form-label">Value</label><input class="form-control" type="text" name="attributeValues" placeholder="Attribute Value" value="' + attributeValue + '" /></div>');
+var filterOptions = {    equals: 'Equal',    contains: 'contains',    notContains: 'notContains',    startsWith: 'startsWith',    endsWith: 'endsWith',    isEmpty: 'isEmpty',    isNotEmpty: 'isNotEmpty'};
+var selectElement = $('<select>').addClass('form-control').attr('name', 'filterTypes');
+for (var optionValue in filterOptions) {   
+ var optionText = filterOptions[optionValue];   
+ var option = $('<option>').val(optionValue).text(optionText);  
+  if (optionValue === filterType) {     
+   option.attr('selected', 'selected');    }  
+  selectElement.append(option);} 
+attributeRow.append($('<div>').addClass('col').append('<label class="col-sm-2 col-form-label">Filtre</label>').append(selectElement));
+attributeRow.append('<div class="col"><label class="col-sm-2 col-form-label">Process</label><button type="button" class="btn btn-danger remove-attribute form-control">Remove</button></div>');
+attributeRow.insertAfter('#logicalOperatorFormGroup');
+} 
+}
+
+            </script>
+        </footer>
+    </div>
+</div>
+</body>
+</html>
