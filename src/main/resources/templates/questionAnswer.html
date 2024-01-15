@@ -30,6 +30,13 @@ window.location.replace("/qurancounteradmin/admin/questionAnswer/questionAnswerA
         </div>
         <hr>
         <hr>
+
+        <div id="controlBar mt-3">
+            <a th:onclick="'javascript:startFullIndexQuestionAnswerIndex()'"
+               class="btn btn-outline-warning">Start Full Index</a>
+        </div>
+        <hr>
+        <hr>
         <a class="btn btn-info btn-sm mt-3" th:href="@{/admin/questionAnswer/createQuestionAnswerPage}">Add</a>
         <form role="form" th:action="@{/admin/questionAnswer/searchAllGeneric}" method="get">
             <div class="form-row mt-2" id="logicalOperatorFormGroup">

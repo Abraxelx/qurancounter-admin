@@ -17,6 +17,27 @@ var newDiv = $(document.createElement('div'));
 newDiv.html(e);
 newDiv.dialog();
 }}); }
+
+
+function startFullIndexQuestionAnswerIndex(){
+var token = $("meta[name='_csrf']").attr("content");
+$.ajax({
+type: "POST",
+contentType: "application/json",
+headers: {"X-CSRF-TOKEN": token},
+url:"/qurancounteradmin/admin/questionAnswer/startFullIndexQuestionAnswerIndex",
+success: function (data) {
+if (data && data.includes("success") ) {
+location.reload();
+}
+},
+error: function (e) {
+var newDiv = $(document.createElement('div'));
+newDiv.html(e);
+newDiv.dialog();
+}}); }
+
+
 if ($("#questionAnswer-add-question-editor-container") && $("#questionAnswer-add-question-editor-container").length > 0 ) {
 var snowAddViewQuestion = new Quill("#questionAnswer-add-question-editor-container", { 
 theme: 'snow',

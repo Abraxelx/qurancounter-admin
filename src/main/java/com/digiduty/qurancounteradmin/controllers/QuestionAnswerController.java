@@ -1,6 +1,9 @@
 package com.digiduty.qurancounteradmin.controllers;
 
 import com.digiduty.qurancounteradmin.dto.SearchGenericDTO;
+import com.digiduty.qurancounteradmin.elasticsearch.entity.QuestionAnswer;
+import com.digiduty.qurancounteradmin.elasticsearch.service.QuestionAnswerElasticService;
+import com.digiduty.qurancounteradmin.elasticsearch.service.impl.QuestionAnswerElasticServiceImpl;
 import com.digiduty.qurancounteradmin.forms.FileForm;
 import com.digiduty.qurancounteradmin.forms.QuestionAnswerForm;
 import com.digiduty.qurancounteradmin.model.QuestionAnswerModel;
@@ -35,6 +38,9 @@ import java.util.Set;
 @RequestMapping("/admin/questionAnswer")
 public class QuestionAnswerController extends AbstractController<QuestionAnswerModel, Long> {
     QuestionAnswerService questionAnswerService;
+
+    @Autowired
+    QuestionAnswerElasticService questionAnswerElasticService;
 
     @Autowired
     public QuestionAnswerController(QuestionAnswerService service) {
@@ -160,6 +166,37 @@ public class QuestionAnswerController extends AbstractController<QuestionAnswerM
             return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
         }
     }
+
+    @RequestMapping(value = "/startFullIndexQuestionAnswerIndex", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity<String> startQuestionAnswerIndex() {
+
+        try {
+
+            List<QuestionAnswerModel> source = questionAnswerService.findAll();
+
+            questionAnswerElasticService.deleteAll();
+
+            for (QuestionAnswerModel sourceForm : source) {
+
+                QuestionAnswer questionAnswer = new QuestionAnswer();
+                questionAnswer.setQuestion(sourceForm.getQuestion());
+                questionAnswer.setSources(sourceForm.getSources());
+                questionAnswer.setSummary(sourceForm.getSummary());
+                questionAnswer.setCreatedDate(sourceForm.getCreatedDate().toInstant());
+                questionAnswer.setUpdateDate(sourceForm.getUpdateDate().toInstant());
+                questionAnswer.setAnswer(sourceForm.getAnswer());
+                questionAnswer.setSeoUrl(sourceForm.getSeoUrl());
+                questionAnswer.setReadCount(sourceForm.getReadCount());
+                questionAnswerElasticService.save(questionAnswer);
+            }
+
+            return new ResponseEntity<>("success", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
+        }
+    }
+
 
     @RequestMapping(value = "/questionAnswerAll", method = RequestMethod.GET)
     public String searchAll(HttpServletRequest request, ModelMap model) {
