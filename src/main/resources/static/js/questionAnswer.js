@@ -7,9 +7,13 @@ headers: {"X-CSRF-TOKEN": token},
 url:"/qurancounteradmin/admin/questionAnswer/removeQuestionAnswer/"+id,
 success: function (data) {
 if (data && data.includes("success") ) {
-if (window.location.search) { 
+$('#successModal').modal('show');
+
+if (window.location.search) {
+
+$('#successModal').modal('show');
 }
-location.reload();
+
 }
 },
 error: function (e) {
@@ -28,7 +32,8 @@ headers: {"X-CSRF-TOKEN": token},
 url:"/qurancounteradmin/admin/questionAnswer/startFullIndexQuestionAnswerIndex",
 success: function (data) {
 if (data && data.includes("success") ) {
-location.reload();
+
+$('#successModal').modal('show');
 }
 },
 error: function (e) {

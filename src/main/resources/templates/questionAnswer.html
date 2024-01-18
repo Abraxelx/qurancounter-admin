@@ -1,8 +1,8 @@
 <!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta type="hidden" name="_csrf" th:content="${_csrf.token}">
-    <meta type="hidden" name="_csrf_header" th:content="${_csrf.headerName}">
+<!--    <meta type="hidden" name="_csrf" th:content="${_csrf.token}">
+    <meta type="hidden" name="_csrf_header" th:content="${_csrf.headerName}">-->
 </head>
 <body>
 <div th:replace="~{fragments/header :: css}"></div>
@@ -140,6 +140,26 @@ window.location.replace("/qurancounteradmin/admin/questionAnswer/questionAnswerA
 </div>
 <div id="questionAnswerEditModalHolder">
 </div>
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Adamsinnnnnn</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Aferin Başardın!!!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
