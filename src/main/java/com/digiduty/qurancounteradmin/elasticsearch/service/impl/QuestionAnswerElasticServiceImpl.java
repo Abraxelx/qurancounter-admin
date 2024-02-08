@@ -15,9 +15,13 @@ import java.util.Optional;
 @Service
 public class QuestionAnswerElasticServiceImpl implements QuestionAnswerElasticService {
 
-    @Autowired
+    private final
     QuestionAnswerRepository questionAnswerRepository;
 
+    @Autowired
+    public QuestionAnswerElasticServiceImpl(QuestionAnswerRepository questionAnswerRepository) {
+        this.questionAnswerRepository = questionAnswerRepository;
+    }
 
 
     @Override

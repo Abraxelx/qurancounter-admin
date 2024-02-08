@@ -3,12 +3,14 @@ package com.digiduty.qurancounteradmin.forms;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class QuestionAnswerForm extends ItemForm {
     @NotEmpty(message = "Question cannot be empty.")
