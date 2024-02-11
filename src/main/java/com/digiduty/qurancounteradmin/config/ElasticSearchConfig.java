@@ -1,5 +1,7 @@
 package com.digiduty.qurancounteradmin.config;
 
+import org.apache.http.conn.ssl.TrustAllStrategy;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -9,6 +11,7 @@ import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfigurat
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,36 +22,50 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.util.Base64;
 
 
 @Configuration
 public class ElasticSearchConfig extends ElasticsearchConfiguration {
 
-    @Value("${spring.elasticsearch.client.certificate}")
-    private String certificateBase64;
+    @Value("${spring.elasticsearch.uris}") String uri;
+    @Value("${spring.elasticsearch.client.certificate}") String certificate;
+    @Value("${spring.elasticsearch.username}") String username;
+    @Value("${spring.elasticsearch.password}") String password;
 
 
     @Override
     public ClientConfiguration clientConfiguration() {
-        final ClientConfiguration clientConfiguration = ClientConfiguration.builder()
-                .connectedTo("localhost:9200")
-                .usingSsl(this.getSSLConetxt())
-                .withBasicAuth("elastic", "0Avth*Q41A1u5*r2k4K1")
+        return ClientConfiguration.builder()
+                .connectedToLocalhost()
+                .usingSsl(getSSLContext())
+                .withBasicAuth(username, password)
                 .build();
-        return clientConfiguration;
     }
 
-    private SSLContext getSSLConetxt() {
+    //For generating default SSLTrust Store on local
+    private static SSLContext buildSSLContext() {
+        try {
+            return new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build();
+        } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private SSLContext getSSLContext() {
         try {
 
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
 
             Certificate ca;
-            Resource resource = new ClassPathResource("http_ca.crt");
+
+            Resource resource = new ClassPathResource(certificate);
 
             try (InputStream certificateInputStream = new FileInputStream(resource.getFile())) {
                 ca = cf.generateCertificate(certificateInputStream);
             }
+
 
             String keyStoreType = KeyStore.getDefaultType();
             KeyStore keyStore = KeyStore.getInstance(keyStoreType);
@@ -63,15 +80,8 @@ public class ElasticSearchConfig extends ElasticsearchConfiguration {
             SSLContext context = SSLContext.getInstance("TLS");
             context.init(null, tmf.getTrustManagers(), null);
             return context;
-        } catch (CertificateException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (KeyManagementException e) {
-            throw new RuntimeException(e);
-        } catch (KeyStoreException e) {
+        } catch (CertificateException | IOException | NoSuchAlgorithmException | KeyManagementException |
+                 KeyStoreException e) {
             throw new RuntimeException(e);
         }
     }

@@ -15,16 +15,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class AbstractFormServiceImpl<T extends ItemForm> implements AbstractFormService<T> {
+    static Logger logger = Logger.getLogger(AbstractFormServiceImpl.class.getName());
     @Override
     public List<T> readExcelForAllTypes(final byte[] bytes, final String fileResources, final T entity) {
         try {
             final Workbook workbook = createWorkbookFromExcelFile(bytes, fileResources);
             return fillObjectDataFromWorkbook(entity, workbook);
         } catch (Exception e) {
-            e.printStackTrace();
+           logger.log(Level.SEVERE, e.getMessage());
         }
         return Collections.EMPTY_LIST;
     }
@@ -90,10 +93,7 @@ public class AbstractFormServiceImpl<T extends ItemForm> implements AbstractForm
                         case "java.lang.Double":
                             field.set(object, StringUtils.isNotEmpty(dataFormatter.formatCellValue(cell).trim()) ? Double.parseDouble(dataFormatter.formatCellValue(cell).trim().trim().replace(",", ".")) : null);
                             break;
-                        case "java.lang.Integer":
-                            field.setInt(object, Integer.parseInt(dataFormatter.formatCellValue(cell).trim().trim()));
-                            break;
-                        case "int":
+                        case "java.lang.Integer", "int":
                             field.setInt(object, Integer.parseInt(dataFormatter.formatCellValue(cell).trim().trim()));
                             break;
                         case "java.lang.Boolean":

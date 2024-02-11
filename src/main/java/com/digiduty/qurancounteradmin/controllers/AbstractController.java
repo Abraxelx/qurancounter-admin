@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public abstract class AbstractController<T, ID extends Serializable> {
-    private AbstractService<T, ID> service;
+    private final AbstractService<T, ID> service;
 
     public AbstractController(AbstractService<T, ID> service) {
         this.service = service;
@@ -22,14 +22,12 @@ public abstract class AbstractController<T, ID extends Serializable> {
 
     @RequestMapping(value = "save", method = RequestMethod.POST)
     public @ResponseBody T save(@RequestBody T entity) {
-        T result = service.save(entity);
-        return result;
+        return service.save(entity);
     }
 
     @RequestMapping(value = "saveAll", method = RequestMethod.POST)
     public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
-        Iterable<S> result = service.saveAll(entities);
-        return result;
+        return service.saveAll(entities);
     }
 
     @RequestMapping(value = "findOne/{entityId}", method = RequestMethod.GET)
@@ -48,7 +46,7 @@ public abstract class AbstractController<T, ID extends Serializable> {
     }
 
     public static String quote(String s) {
-        return new StringBuilder().append('\'').append(s).append('\'').toString();
+        return '\'' + s + '\'';
     }
 
     public void searchEntities(final HttpServletRequest request, SearchGenericDTO searchGenericDTO, final Model model, final RedirectAttributes ra) {

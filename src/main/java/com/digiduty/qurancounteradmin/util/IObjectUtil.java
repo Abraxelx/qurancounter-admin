@@ -2,8 +2,12 @@ package com.digiduty.qurancounteradmin.util;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class IObjectUtil {
+
+    static Logger logger = Logger.getLogger(IObjectUtil.class.getName());
     public static <T> boolean areAllFieldsNullOrEmpty(T object) {
         if (object == null) {
             return true;
@@ -23,7 +27,7 @@ public class IObjectUtil {
                     return false;
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                logger.log(Level.SEVERE, e.getMessage());
             }
         }
         return true;

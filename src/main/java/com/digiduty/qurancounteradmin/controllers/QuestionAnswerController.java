@@ -3,7 +3,6 @@ package com.digiduty.qurancounteradmin.controllers;
 import com.digiduty.qurancounteradmin.dto.SearchGenericDTO;
 import com.digiduty.qurancounteradmin.elasticsearch.entity.QuestionAnswer;
 import com.digiduty.qurancounteradmin.elasticsearch.service.QuestionAnswerElasticService;
-import com.digiduty.qurancounteradmin.elasticsearch.service.impl.QuestionAnswerElasticServiceImpl;
 import com.digiduty.qurancounteradmin.forms.FileForm;
 import com.digiduty.qurancounteradmin.forms.QuestionAnswerForm;
 import com.digiduty.qurancounteradmin.model.QuestionAnswerModel;
@@ -37,23 +36,23 @@ import java.util.Set;
 @Controller
 @RequestMapping("/admin/questionAnswer")
 public class QuestionAnswerController extends AbstractController<QuestionAnswerModel, Long> {
-    QuestionAnswerService questionAnswerService;
+    private final QuestionAnswerService questionAnswerService;
+
+    private final QuestionAnswerElasticService questionAnswerElasticService;
 
     @Autowired
-    QuestionAnswerElasticService questionAnswerElasticService;
-
-    @Autowired
-    public QuestionAnswerController(QuestionAnswerService service) {
+    public QuestionAnswerController(QuestionAnswerService service, QuestionAnswerElasticService questionAnswerElasticService, QuestionAnswerPopulator questionAnswerPopulator, Validator validator, AbstractFormService<QuestionAnswerForm> abstractFormService) {
         super(service);
         this.questionAnswerService = service;
+        this.questionAnswerElasticService = questionAnswerElasticService;
+        this.questionAnswerPopulator = questionAnswerPopulator;
+        this.validator = validator;
+        this.abstractFormService = abstractFormService;
     }
 
-    @Autowired
-    QuestionAnswerPopulator questionAnswerPopulator;
-    @Autowired
-    private Validator validator;
-    @Autowired
-    AbstractFormService<QuestionAnswerForm> abstractFormService;
+    private final QuestionAnswerPopulator questionAnswerPopulator;
+    private final Validator validator;
+    private final AbstractFormService<QuestionAnswerForm> abstractFormService;
 
     @ModelAttribute("entityProperties")
     public List<String> populateEntityProperties() {
@@ -83,7 +82,7 @@ public class QuestionAnswerController extends AbstractController<QuestionAnswerM
                     for (ConstraintViolation<QuestionAnswerForm> constraintViolation : violations) {
                         sb.append(constraintViolation.getMessage());
                     }
-                    throw new ConstraintViolationException("Error occurred: " + sb.toString(), violations);
+                    throw new ConstraintViolationException("Error occurred: " + sb, violations);
                 }
             }
             if (CollectionUtils.isEmpty(target)) {
