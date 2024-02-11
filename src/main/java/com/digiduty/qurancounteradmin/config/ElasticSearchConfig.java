@@ -4,12 +4,15 @@ import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyManagementException;
@@ -57,11 +60,12 @@ public class ElasticSearchConfig extends ElasticsearchConfiguration {
 
             Certificate ca;
 
-            byte[] decode = Base64.getDecoder().decode(certificate);
+            Resource resource = new ClassPathResource(certificate);
 
-            try (InputStream certificateInputStream = new ByteArrayInputStream(decode)) {
+            try (InputStream certificateInputStream = new FileInputStream(resource.getFile())) {
                 ca = cf.generateCertificate(certificateInputStream);
             }
+
 
             String keyStoreType = KeyStore.getDefaultType();
             KeyStore keyStore = KeyStore.getInstance(keyStoreType);
